@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.crawler.dao.ForeigninfoDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+	<resultMap type="io.renren.modules.crawler.entity.ForeigninfoEntity"
+		id="foreigninfoMap">
+		<result property="id" column="id" />
+		<result property="englishName" column="english_name" />
+		<result property="ics" column="ics" />
+		<result property="isquerys" column="isquerys" />
+		<result property="language" column="language" />
+		<result property="pages" column="pages" />
+		<result property="types" column="types" />
+		<result property="urls" column="urls" />
+		<result property="beReplacedStcode" column="be_replaced_stcode" />
+		<result property="firstPublishDate" column="first_publish_date" />
+		<result property="publishDate" column="publish_date" />
+		<result property="referenceStandard" column="reference_standard" />
+		<result property="standardClass" column="standard_class" />
+		<result property="stcode" column="stcode" />
+		<result property="takeOfStcode" column="take_of_stcode" />
+		<result property="useInternationalStcode" column="use_international_stcode" />
+		<result property="chinahName" column="chinah_name" />
+	</resultMap>
+
+	<select id="queryObject" resultType="io.renren.modules.crawler.entity.ForeigninfoEntity">
+		select * from foreigninfo
+		where id = #{value}
+	</select>
+
+	<select id="queryNoyetInfo" resultType="io.renren.modules.crawler.entity.ForeigninfoEntity">
+		call proc_info()
+	</select>
+	
+	<select id="queryList" resultType="io.renren.modules.crawler.entity.ForeigninfoEntity">
+		select * from foreigninfo
+		<choose>
+			<when test="sidx != null and sidx.trim() != ''">
+				order by ${sidx} ${order}
+			</when>
+			<otherwise>
+				order by id desc
+			</otherwise>
+		</choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="queryTotal" resultType="int">
+		select count(*) from
+		foreigninfo
+	</select>
+
+	<insert id="save" parameterType="io.renren.modules.crawler.entity.ForeigninfoEntity"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into foreigninfo
+		(
+		`english_name`,
+		`ics`,
+		`isquerys`,
+		`language`,
+		`pages`,
+		`types`,
+		`urls`,
+		`be_replaced_stcode`,
+		`first_publish_date`,
+		`publish_date`,
+		`reference_standard`,
+		`standard_class`,
+		`stcode`,
+		`take_of_stcode`,
+		`use_international_stcode`,
+		`chinah_name`
+		)
+		values
+		(
+		#{englishName},
+		#{ics},
+		#{isquerys},
+		#{language},
+		#{pages},
+		#{types},
+		#{urls},
+		#{beReplacedStcode},
+		#{firstPublishDate},
+		#{publishDate},
+		#{referenceStandard},
+		#{standardClass},
+		#{stcode},
+		#{takeOfStcode},
+		#{useInternationalStcode},
+		#{chinahName}
+		)
+	</insert>
+
+	<update id="update" parameterType="io.renren.modules.crawler.entity.ForeigninfoEntity">
+		update foreigninfo
+		<set>
+			<if test="englishName != null">`english_name` = #{englishName}, </if>
+			<if test="ics != null">`ics` = #{ics}, </if>
+			<if test="isquerys != null">`isquerys` = #{isquerys}, </if>
+			<if test="language != null">`language` = #{language}, </if>
+			<if test="pages != null">`pages` = #{pages}, </if>
+			<if test="types != null">`types` = #{types}, </if>
+			<if test="urls != null">`urls` = #{urls}, </if>
+			<if test="beReplacedStcode != null">`be_replaced_stcode` = #{beReplacedStcode}, </if>
+			<if test="firstPublishDate != null">`first_publish_date` = #{firstPublishDate}, </if>
+			<if test="publishDate != null">`publish_date` = #{publishDate}, </if>
+			<if test="referenceStandard != null">`reference_standard` = #{referenceStandard}, </if>
+			<if test="standardClass != null">`standard_class` = #{standardClass}, </if>
+			<if test="stcode != null">`stcode` = #{stcode}, </if>
+			<if test="takeOfStcode != null">`take_of_stcode` = #{takeOfStcode}, </if>
+			<if test="useInternationalStcode != null">`use_international_stcode` = #{useInternationalStcode},
+			</if>
+			<if test="chinahName != null">`chinah_name` = #{chinahName}</if>
+		</set>
+		where id = #{id}
+	</update>
+
+	<delete id="delete">
+		delete from foreigninfo where id = #{value}
+	</delete>
+
+	<delete id="deleteBatch">
+		delete from foreigninfo where id in
+		<foreach item="id" collection="array" open="(" separator=","
+			close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>
