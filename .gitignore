@@ -3,7 +3,10 @@
 *.classpath
 *.project
 *.factorypath
-renren-crawler/target/
+/target/
+/.settings/
+/renren-crawler/target/
+/renren-crawler/.settings/
 
 # Log file
 *.log
