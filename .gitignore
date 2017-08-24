@@ -3,7 +3,7 @@
 *.classpath
 *.project
 *.factorypath
-target
+/target/
 
 # Log file
 *.log
