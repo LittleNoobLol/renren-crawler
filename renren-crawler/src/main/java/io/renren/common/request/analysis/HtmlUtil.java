@@ -8,7 +8,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import io.renren.modules.crawler.entity.ForeigninfoEntity;
 
 public class HtmlUtil {
 	

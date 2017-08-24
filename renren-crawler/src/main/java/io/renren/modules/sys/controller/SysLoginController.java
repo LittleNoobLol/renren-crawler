@@ -25,9 +25,6 @@ import java.util.Map;
 /**
  * 登录相关
  * 
- * @author chenshun
- * @email sunlightcs@gmail.com
- * @date 2016年11月10日 下午1:15:31
  */
 @RestController
 public class SysLoginController extends AbstractController {

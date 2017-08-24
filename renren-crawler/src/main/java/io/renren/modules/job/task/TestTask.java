@@ -3,8 +3,6 @@ package io.renren.modules.job.task;
 import io.renren.common.request.analysis.HtmlUtil;
 import io.renren.common.request.constant.HeaderConstant;
 import io.renren.common.request.httpclient.HttpClientUtil;
-import io.renren.modules.crawler.entity.ForeigninfoEntity;
-import io.renren.modules.crawler.service.ForeigninfoService;
 
 import java.util.List;
 
@@ -17,16 +15,11 @@ import org.springframework.stereotype.Component;
  * 
  * testTask为spring bean的名称
  * 
- * @author chenshun
- * @email sunlightcs@gmail.com
- * @date 2016年11月30日 下午1:34:24
  */
 @Component("testTask")
 public class TestTask{
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Autowired
-	private ForeigninfoService foreigninfoService;
 
 	public void test(String params) {
 		logger.info("我是爬虫请求，正在被执行，参数为：" + params);
