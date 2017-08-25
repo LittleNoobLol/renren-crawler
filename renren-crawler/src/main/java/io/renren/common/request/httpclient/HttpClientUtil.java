@@ -3,11 +3,14 @@ package io.renren.common.request.httpclient;
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLHandshakeException;
 
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpHost;
@@ -15,6 +18,7 @@ import org.apache.http.HttpRequest;
 import org.apache.http.NoHttpResponseException;
 import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -32,6 +36,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
@@ -217,6 +222,81 @@ public class HttpClientUtil {
 			String result = EntityUtils.toString(entity, "utf-8");
 			EntityUtils.consume(entity);
 			return result;
+		} catch (IOException e) {
+			LOGGER.error("读取网页内容失败",e);
+			throw new Exception();
+		} finally {
+			try {
+				if (response != null)
+					response.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+
+	/**
+	 * POST请求URL获取内容
+	 * 
+	 * @param url
+	 * @param 请求头
+	 * @param 传统表单格式参数
+	 * @return
+	 */
+	public static String postFormData(String url, Map<String, String> headers,List<BasicNameValuePair> params) throws Exception {
+		HttpPost httppost = new HttpPost(url);
+		config(httppost, headers);
+		
+		// 设置传统表单参数
+		HttpEntity stringEntity = new UrlEncodedFormEntity(params, "UTF-8");
+		httppost.setEntity(stringEntity);
+		
+		CloseableHttpResponse response = null;
+		try {
+			response = getHttpClient(url).execute(httppost, HttpClientContext.create());
+			Header[] allHeaders = response.getAllHeaders();
+			for (Header header : allHeaders) {
+				System.out.println(header.getName()+":"+header.getValue());
+			}
+			HttpEntity entity = response.getEntity();
+			String result = EntityUtils.toString(entity, "utf-8");
+			EntityUtils.consume(entity);
+			return result;
+		} catch (IOException e) {
+			LOGGER.error("读取网页内容失败",e);
+			throw new Exception();
+		} finally {
+			try {
+				if (response != null)
+					response.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	/**
+	 * POST请求URL获取相应的head
+	 * 
+	 * @param url
+	 * @param 请求头
+	 * @param 传统表单格式参数
+	 * @return
+	 */
+	public static Header[] postFormDataHead(String url, Map<String, String> headers,List<BasicNameValuePair> params) throws Exception {
+		HttpPost httppost = new HttpPost(url);
+		config(httppost, headers);
+		
+		// 设置传统表单参数
+		HttpEntity stringEntity = new UrlEncodedFormEntity(params, "UTF-8");
+		httppost.setEntity(stringEntity);
+		
+		CloseableHttpResponse response = null;
+		try {
+			response = getHttpClient(url).execute(httppost, HttpClientContext.create());
+			Header[] allHeaders = response.getAllHeaders();
+			return allHeaders;
 		} catch (IOException e) {
 			LOGGER.error("读取网页内容失败",e);
 			throw new Exception();
