@@ -2,9 +2,9 @@ spring:
     datasource:
         type: com.alibaba.druid.pool.DruidDataSource
         driverClassName: com.mysql.jdbc.Driver
-        url: jdbc:mysql://192.168.0.223:3306/zbgz?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
+        url: jdbc:mysql://192.168.0.223:3306/renren_crawler?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8
         username: root
-        password: 123456
+        password: root
         druid:
             initial-size: 10
             max-active: 100
