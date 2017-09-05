@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.crawler.ydzx.dao.TbAuthorDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.crawler.ydzx.entity.TbAuthorEntity" id="tbAuthorMap">
+        <result property="id" column="id"/>
+        <result property="bookCount" column="book_count"/>
+        <result property="channelImage" column="channel_image"/>
+        <result property="channelName" column="channel_name"/>
+        <result property="channelSummary" column="channel_summary"/>
+        <result property="channelType" column="channel_type"/>
+        <result property="mediaDomain" column="media_domain"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="io.renren.modules.crawler.ydzx.entity.TbAuthorEntity">
+		select * from tb_author where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="io.renren.modules.crawler.ydzx.entity.TbAuthorEntity">
+		select * from tb_author
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from tb_author 
+	</select>
+	 
+	<insert id="save" parameterType="io.renren.modules.crawler.ydzx.entity.TbAuthorEntity">
+		insert into tb_author
+		(
+			`id`, 
+			`book_count`, 
+			`channel_image`, 
+			`channel_name`, 
+			`channel_summary`, 
+			`channel_type`, 
+			`media_domain`
+		)
+		values
+		(
+			#{id}, 
+			#{bookCount}, 
+			#{channelImage}, 
+			#{channelName}, 
+			#{channelSummary}, 
+			#{channelType}, 
+			#{mediaDomain}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="io.renren.modules.crawler.ydzx.entity.TbAuthorEntity">
+		update tb_author 
+		<set>
+			<if test="bookCount != null">`book_count` = #{bookCount}, </if>
+			<if test="channelImage != null">`channel_image` = #{channelImage}, </if>
+			<if test="channelName != null">`channel_name` = #{channelName}, </if>
+			<if test="channelSummary != null">`channel_summary` = #{channelSummary}, </if>
+			<if test="channelType != null">`channel_type` = #{channelType}, </if>
+			<if test="mediaDomain != null">`media_domain` = #{mediaDomain}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from tb_author where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from tb_author where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

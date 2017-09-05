@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.crawler.ydzx.dao.TbDetailsDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.crawler.ydzx.entity.TbDetailsEntity" id="tbDetailsMap">
+        <result property="id" column="id"/>
+        <result property="authorId" column="author_id"/>
+        <result property="contextHtml" column="context_html"/>
+        <result property="contextText" column="context_text"/>
+        <result property="ctype" column="ctype"/>
+        <result property="date" column="date"/>
+        <result property="docid" column="docid"/>
+        <result property="dtype" column="dtype"/>
+        <result property="images" column="images"/>
+        <result property="summary" column="summary"/>
+        <result property="title" column="title"/>
+        <result property="url" column="url"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="io.renren.modules.crawler.ydzx.entity.TbDetailsEntity">
+		select * from tb_details where id = #{value}
+	</select>
+
+	<select id="queryList" resultType="io.renren.modules.crawler.ydzx.entity.TbDetailsEntity">
+		select 
+		id,title,summary,context_html,date,author_id,url
+		 from tb_details
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from tb_details 
+	</select>
+	 
+	<insert id="save" parameterType="io.renren.modules.crawler.ydzx.entity.TbDetailsEntity">
+		insert into tb_details
+		(
+			`id`, 
+			`author_id`, 
+			`context_html`, 
+			`context_text`, 
+			`ctype`, 
+			`date`, 
+			`docid`, 
+			`dtype`, 
+			`images`, 
+			`summary`, 
+			`title`, 
+			`url`
+		)
+		values
+		(
+			#{id}, 
+			#{authorId}, 
+			#{contextHtml}, 
+			#{contextText}, 
+			#{ctype}, 
+			#{date}, 
+			#{docid}, 
+			#{dtype}, 
+			#{images}, 
+			#{summary}, 
+			#{title}, 
+			#{url}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="io.renren.modules.crawler.ydzx.entity.TbDetailsEntity">
+		update tb_details 
+		<set>
+			<if test="authorId != null">`author_id` = #{authorId}, </if>
+			<if test="contextHtml != null">`context_html` = #{contextHtml}, </if>
+			<if test="contextText != null">`context_text` = #{contextText}, </if>
+			<if test="ctype != null">`ctype` = #{ctype}, </if>
+			<if test="date != null">`date` = #{date}, </if>
+			<if test="docid != null">`docid` = #{docid}, </if>
+			<if test="dtype != null">`dtype` = #{dtype}, </if>
+			<if test="images != null">`images` = #{images}, </if>
+			<if test="summary != null">`summary` = #{summary}, </if>
+			<if test="title != null">`title` = #{title}, </if>
+			<if test="url != null">`url` = #{url}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from tb_details where id = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from tb_details where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>
