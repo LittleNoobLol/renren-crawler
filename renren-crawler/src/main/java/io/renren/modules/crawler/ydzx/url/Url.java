@@ -18,5 +18,17 @@ public class Url {
 		sb.append(System.currentTimeMillis());
 		return sb.toString();
 	}
-	
+
+	/***
+	 * 
+	 * @Description 获取详情页面信息
+	 * @author lixin
+	 * @date 2017年9月5日
+	 * @param id
+	 * @return
+	 */
+	public static String getDetail(long id) {
+		return "http://www.yidianzixun.com/mp/content?id=" + id;
+	}
+
 }

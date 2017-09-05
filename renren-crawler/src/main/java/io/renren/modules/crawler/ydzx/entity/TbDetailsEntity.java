@@ -205,4 +205,14 @@ public class TbDetailsEntity implements Serializable {
 	public String getUrl() {
 		return url;
 	}
+
+	@Override
+	public String toString() {
+		return "TbDetailsEntity [id=" + id + ", authorId=" + authorId + ", contextHtml=" + contextHtml
+				+ ", contextText=" + contextText + ", ctype=" + ctype + ", date=" + date + ", docid=" + docid
+				+ ", dtype=" + dtype + ", images=" + images + ", summary=" + summary + ", title=" + title + ", url="
+				+ url + "]";
+	}
+	
+	
 }

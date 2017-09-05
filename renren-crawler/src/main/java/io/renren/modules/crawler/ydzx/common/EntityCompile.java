@@ -3,6 +3,10 @@ package io.renren.modules.crawler.ydzx.common;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+
 import com.alibaba.fastjson.JSON;
 
 import io.renren.common.utils.DateUtils;
@@ -12,6 +16,38 @@ import io.renren.modules.crawler.ydzx.entity.TbAuthorEntity;
 import io.renren.modules.crawler.ydzx.entity.TbDetailsEntity;
 
 public class EntityCompile {
+
+	/***
+	 * 
+	 * @Description 详情页面获取信息
+	 * @author lixin
+	 * @date 2017年9月5日
+	 * @param html
+	 * @return
+	 */
+	public static TbDetailsEntity comileDetail(String html) {
+		TbDetailsEntity entity = new TbDetailsEntity();
+		Document doc = Jsoup.parse(html);
+		// 文章正文内容
+		Elements context = doc.select(".content-bd");
+		entity.setContextHtml(context.html());
+		entity.setContextText(context.text());
+
+		// 获取文章作者
+		String author = doc.select(".meta a").attr("href");
+		author=author.substring(author.indexOf("m") + 1, author.length());
+		entity.setAuthorId(Integer.valueOf(author));
+
+		// 获取日期
+		String date = doc.select(".meta span:eq(0)").text();
+		entity.setDate(DateUtils.parse(date, "yyyy.MM.dd"));
+
+		// 标题
+		String title = doc.select(".left-wrapper h3").text();
+		entity.setTitle(title);
+
+		return entity;
+	}
 
 	public static TbAuthorEntity comileAuthor(String json) {
 		// 转化对象
@@ -53,30 +89,38 @@ public class EntityCompile {
 		tbAuthor.setChannelSummary(author.getChannel_summary());
 		tbAuthor.setChannelType(author.getChannel_type());
 		tbAuthor.setMediaDomain(author.getChannel_media().getMedia_domain());
-		
+
 		return tbAuthor;
 	}
-	
-	public static List<TbDetailsEntity> comileDetails(String json){
+
+	/***
+	 * 
+	 * @Description 合并作者里面的文章
+	 * @author lixin
+	 * @date 2017年9月5日
+	 * @param json
+	 * @return
+	 */
+	public static List<TbDetailsEntity> comileDetails(String json) {
 		// 转化对象
 		Author author = JSON.parseObject(json, Author.class);
 		// 获取id
 		String channel_id = author.getChannel_id();
 		// 移除 id前面的m
 		channel_id = channel_id.substring(1, channel_id.length());
-		
+
 		List<Result> result = author.getResult();
-		List<TbDetailsEntity> details=null;
+		List<TbDetailsEntity> details = null;
 		if (result != null && result.size() > 0) {
-			details=new ArrayList<TbDetailsEntity>();
+			details = new ArrayList<TbDetailsEntity>();
 			for (Result r : result) {
-				TbDetailsEntity entity=new TbDetailsEntity();
+				TbDetailsEntity entity = new TbDetailsEntity();
 				String url = r.getUrl();
-				url = url.substring(url.lastIndexOf("=")+1,url.length());
+				url = url.substring(url.lastIndexOf("=") + 1, url.length());
 				entity.setId(Long.valueOf(url));
 				entity.setAuthorId(Integer.valueOf(channel_id));
-				//entity.setContextHtml(contextHtml);
-				//entity.setContextText(contextText);
+				// entity.setContextHtml(contextHtml);
+				// entity.setContextText(contextText);
 				entity.setCtype(r.getCtype());
 				entity.setDate(DateUtils.parse(r.getDate()));
 				entity.setDocid(r.getDocid());

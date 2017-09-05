@@ -38,4 +38,18 @@ public class DateUtils {
 		}
 		return parse;
 	}
+	
+
+	/**
+	 * 使用预设格式将字符串转为Date
+	 */
+	public static Date parse(String strDate,String pattan) {
+		SimpleDateFormat sdf = new SimpleDateFormat(pattan);
+		Date parse = null;
+		try {
+			parse = sdf.parse(strDate);
+		} catch (ParseException e) {
+		}
+		return parse;
+	}
 }
