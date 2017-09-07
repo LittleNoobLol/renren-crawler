@@ -5,12 +5,6 @@ package io.renren.modules.crawler.ydzx.common.entity;
 
 import java.util.List;
 
-/**
- * Auto-generated: 2017-09-04 15:33:28
- *
- * @author bejson.com (i@bejson.com)
- * @website http://www.bejson.com/java2pojo/
- */
 public class Result {
 
 	private String date;

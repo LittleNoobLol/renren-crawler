@@ -1,6 +1,7 @@
 package io.renren.modules.crawler.common;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InterruptedIOException;
 import java.net.UnknownHostException;
 import java.util.List;
@@ -38,7 +39,6 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
-
 
 /**
  * HttpClient 池工具类
@@ -304,4 +304,40 @@ public class HttpClientUtil {
 		}
 	}
 
+	/***
+	 * 
+	 * @Description GET请求内容
+	 * @author lixin
+	 * @date 2017年8月30日
+	 * @param 请求路径
+	 * @param 请求头,可以为空
+	 * @return 请求网站后相应结果
+	 * @throws Exception
+	 */
+	public static boolean download(String url, Map<String, String> headers, String filePath, String fileName)
+			throws Exception {
+		HttpGet httpget = new HttpGet(url);
+		config(httpget, headers);
+		CloseableHttpResponse response = null;
+		try {
+			response = getHttpClient(url).execute(httpget, HttpClientContext.create());
+			HttpEntity entity = response.getEntity();
+
+			InputStream in = entity.getContent();
+
+			boolean falg = FileUtils.savePicToDisk(in, filePath, fileName);
+
+			EntityUtils.consume(entity);
+			return falg;
+		} catch (IOException e) {
+			throw e;
+		} finally {
+			try {
+				if (response != null)
+					response.close();
+			} catch (IOException e) {
+				log.error("get请求关闭对象失败", e);
+			}
+		}
+	}
 }

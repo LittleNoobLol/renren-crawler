@@ -2,7 +2,7 @@ package io.renren.modules.crawler.ydzx.common.entity;
 
 import java.util.List;
 
-public class Author {
+public class NewsJson {
 
 	/**
 	 * 返回状态: 正常:success

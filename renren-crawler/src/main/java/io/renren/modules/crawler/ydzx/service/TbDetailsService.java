@@ -14,6 +14,8 @@ import java.util.Map;
  */
 public interface TbDetailsService {
 	
+	long queryMaxId();
+	
 	TbDetailsEntity queryObject(Long id);
 	
 	List<TbDetailsEntity> queryList(Map<String, Object> map);

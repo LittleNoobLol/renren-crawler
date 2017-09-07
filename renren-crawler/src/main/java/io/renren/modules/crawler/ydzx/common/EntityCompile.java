@@ -10,12 +10,31 @@ import org.jsoup.select.Elements;
 import com.alibaba.fastjson.JSON;
 
 import io.renren.common.utils.DateUtils;
-import io.renren.modules.crawler.ydzx.common.entity.Author;
+import io.renren.modules.crawler.ydzx.common.entity.NewsJson;
 import io.renren.modules.crawler.ydzx.common.entity.Result;
 import io.renren.modules.crawler.ydzx.entity.TbAuthorEntity;
 import io.renren.modules.crawler.ydzx.entity.TbDetailsEntity;
 
 public class EntityCompile {
+
+	/***
+	 * 
+	 * @Description 对于新闻列表json数据解析
+	 * @author lixin
+	 * @date 2017年9月8日
+	 */
+	public static long getUrl(String json) {
+		// 获取新闻列表集合
+		NewsJson news = JSON.parseObject(json, NewsJson.class);
+		// 获取第一个元素
+		Result result = news.getResult().get(0);
+		// 获取url
+		String url = result.getUrl();
+		System.out.println("当前的url是："+url);
+		// 截取获取最新的id
+		String substring = url.substring(url.lastIndexOf('=')+1, url.length());
+		return Long.valueOf(substring);
+	}
 
 	/***
 	 * 
@@ -25,9 +44,11 @@ public class EntityCompile {
 	 * @param html
 	 * @return
 	 */
-	public static TbDetailsEntity comileDetail(String html) {
+	public static TbDetailsEntity comileDetail(String html,long id) {
 		TbDetailsEntity entity = new TbDetailsEntity();
+		entity.setId(id);
 		Document doc = Jsoup.parse(html);
+		
 		// 文章正文内容
 		Elements context = doc.select(".content-bd");
 		entity.setContextHtml(context.html());
@@ -35,7 +56,7 @@ public class EntityCompile {
 
 		// 获取文章作者
 		String author = doc.select(".meta a").attr("href");
-		author=author.substring(author.indexOf("m") + 1, author.length());
+		author = author.substring(author.indexOf("m") + 1, author.length());
 		entity.setAuthorId(Integer.valueOf(author));
 
 		// 获取日期
@@ -51,7 +72,7 @@ public class EntityCompile {
 
 	public static TbAuthorEntity comileAuthor(String json) {
 		// 转化对象
-		Author author = JSON.parseObject(json, Author.class);
+		NewsJson author = JSON.parseObject(json, NewsJson.class);
 		// 表示没有此用户
 		if (author.getReason() != null) {
 			return null;
@@ -103,7 +124,7 @@ public class EntityCompile {
 	 */
 	public static List<TbDetailsEntity> comileDetails(String json) {
 		// 转化对象
-		Author author = JSON.parseObject(json, Author.class);
+		NewsJson author = JSON.parseObject(json, NewsJson.class);
 		// 获取id
 		String channel_id = author.getChannel_id();
 		// 移除 id前面的m

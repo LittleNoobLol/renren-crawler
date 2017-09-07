@@ -51,5 +51,10 @@ public class TbDetailsServiceImpl implements TbDetailsService {
 	public void deleteBatch(Long[] ids){
 		tbDetailsDao.deleteBatch(ids);
 	}
+
+	@Override
+	public long queryMaxId() {
+		return tbDetailsDao.queryMaxId();
+	}
 	
 }
