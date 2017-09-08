@@ -5,6 +5,8 @@ import io.renren.common.utils.RedisUtils;
 import io.renren.common.utils.SpringContextUtils;
 import io.renren.modules.crawler.ydzx.service.TbDetailsService;
 import io.renren.modules.crawler.ydzx.url.Url;
+import us.codecraft.webmagic.Spider;
+import io.renren.modules.crawler.ydzx.common.DetailMagic;
 import io.renren.modules.crawler.ydzx.common.EntityCompile;
 import io.renren.modules.crawler.ydzx.common.Header;
 import io.renren.modules.crawler.ydzx.entity.TbDetailsEntity;
@@ -54,6 +56,16 @@ public class RenrenApplicationTests {
 	}
 
 	@Test
+	public void magicTest(){
+		TbDetailsService detailService = (TbDetailsService) SpringContextUtils.getBean("tbDetailsService");
+		Spider create = Spider.create(new DetailMagic(detailService));
+		for (int i = 34018832; i < 34018851; i++) {
+			create.addUrl("http://www.yidianzixun.com/mp/content?id=" + i);
+		} 
+		create.thread(5).run();
+		
+	}
+	
 	public void job() throws Exception{
 		TbDetailsService detailService = (TbDetailsService) SpringContextUtils.getBean("tbDetailsService");
 		long start = detailService.queryMaxId();

@@ -1,6 +1,7 @@
 package io.renren.modules.crawler.ydzx.common;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.jsoup.Jsoup;
@@ -30,9 +31,9 @@ public class EntityCompile {
 		Result result = news.getResult().get(0);
 		// 获取url
 		String url = result.getUrl();
-		System.out.println("当前的url是："+url);
+		System.out.println("当前的url是：" + url);
 		// 截取获取最新的id
-		String substring = url.substring(url.lastIndexOf('=')+1, url.length());
+		String substring = url.substring(url.lastIndexOf('=') + 1, url.length());
 		return Long.valueOf(substring);
 	}
 
@@ -44,11 +45,11 @@ public class EntityCompile {
 	 * @param html
 	 * @return
 	 */
-	public static TbDetailsEntity comileDetail(String html,long id) {
+	public static TbDetailsEntity comileDetail(String html, long id) {
 		TbDetailsEntity entity = new TbDetailsEntity();
 		entity.setId(id);
 		Document doc = Jsoup.parse(html);
-		
+
 		// 文章正文内容
 		Elements context = doc.select(".content-bd");
 		entity.setContextHtml(context.html());
@@ -66,6 +67,57 @@ public class EntityCompile {
 		// 标题
 		String title = doc.select(".left-wrapper h3").text();
 		entity.setTitle(title);
+
+		return entity;
+	}
+
+	public static TbDetailsEntity comileDetail(Document doc, String url) {
+		url = url.substring(url.lastIndexOf('=') + 1, url.length());
+
+		TbDetailsEntity entity = new TbDetailsEntity();
+		entity.setId(Long.valueOf(url));
+
+		// 标题
+		String title = doc.select(".left-wrapper h2").text();
+		entity.setTitle(title);
+
+		// 文章简介
+		String summary = doc.select("head meta[name=description]").attr("content");
+		entity.setSummary(summary);
+
+		// 文章正文内容
+		Elements context = doc.select(".content-bd");
+		entity.setContextHtml(context.html());
+		entity.setContextText(context.text());
+
+		// 获取文章作者
+		String author = doc.select(".meta a").attr("href");
+		author = author.substring(author.indexOf("m") + 1, author.length());
+		entity.setAuthorId(Integer.valueOf(author));
+
+		Elements select = doc.select(".left-wrapper .meta span");// 获取日期
+		System.out.println("MySize:"+select.size());
+		String date;
+		if (select.size() == 5) {
+			// 获取日期
+			date = doc.select(".left-wrapper .meta span:eq(1)").text();
+		} else {
+			date = doc.select(".left-wrapper .meta span:eq(2)").text();
+		}
+
+		System.out.println("mydate:" + date);
+		if (date.indexOf("小时前") == -1) {
+			entity.setDate(DateUtils.parse(date, "yyyy.MM.dd"));
+		} else {
+			// 截取 小时前
+			String substring = date.substring(0, date.indexOf("小时前"));
+			// 转换
+			int hour = Integer.valueOf(substring);
+			// 获取他的相反数
+			Date hoursAgoTime = DateUtils.getHoursAgoTime(0 - hour);
+			// 保存
+			entity.setDate(hoursAgoTime);
+		}
 
 		return entity;
 	}

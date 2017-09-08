@@ -1,20 +1,17 @@
 package io.renren.modules.job.task;
 
-import io.renren.common.request.analysis.HtmlUtil;
-import io.renren.common.request.constant.HeaderConstant;
-import io.renren.common.request.httpclient.HttpClientUtil;
+import io.renren.modules.crawler.common.HttpClientUtil;
 import io.renren.common.utils.SpringContextUtils;
+import io.renren.modules.crawler.ydzx.common.DetailMagic;
 import io.renren.modules.crawler.ydzx.common.EntityCompile;
 import io.renren.modules.crawler.ydzx.common.Header;
 import io.renren.modules.crawler.ydzx.entity.TbDetailsEntity;
 import io.renren.modules.crawler.ydzx.service.TbDetailsService;
 import io.renren.modules.crawler.ydzx.url.Url;
-
-import java.util.List;
+import us.codecraft.webmagic.Spider;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -27,30 +24,16 @@ public class TestTask {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	public void test(String params) {
+		// 获取链接对象
 		TbDetailsService detailService = (TbDetailsService) SpringContextUtils.getBean("tbDetailsService");
-		long start = detailService.queryMaxId();
-		
-		try {
-			String json = HttpClientUtil.get(Url.getDeatil(),Header.header);
-			long end = EntityCompile.getUrl(json);
-			for (long i = start; i < end; i++) {
-				try {
-				System.out.println("当前是"+i+"条，");
-				if(i%30000==0){
-					detailService = (TbDetailsService) SpringContextUtils.getBean("tbDetailsService");
-				}
-				String html = HttpClientUtil.get(Url.getDetail(i),Header.header);
-				TbDetailsEntity comileDetail = EntityCompile.comileDetail(html,i);
-				detailService.save(comileDetail);
-				System.out.println("保存成功");
-				} catch (Exception e) {
-					System.out.println("保存失败");
-					e.printStackTrace();
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		// 创建magic爬虫
+		Spider create = Spider.create(new DetailMagic(detailService));
+		// 添加url
+		for (int i = 34018832; i < 34018851; i++) {
+			create.addUrl("http://www.yidianzixun.com/mp/content?id=" + i);
+		} 
+		// 设置线程数并启动
+		create.thread(5).run();
 	}
 	
 	
@@ -68,4 +51,5 @@ public class TestTask {
 	 * logger.error("执行http请求失败 "); info.setIsquerys(-1); } finally {
 	 * foreigninfoService.update(info); countDownLatch.countDown(); } }
 	 */
+
 }
