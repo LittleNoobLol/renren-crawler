@@ -27,7 +27,19 @@ public class Url {
 	 * @param id
 	 * @return
 	 */
-	public static String getDetail(long id) {
+	public static String getDetail(int id) {
+		return "http://www.yidianzixun.com/mp/content?id=" + id;
+	}
+	
+	/***
+	 * 
+	 * @Description 获取详情页面信息
+	 * @author lixin
+	 * @date 2017年9月5日
+	 * @param id
+	 * @return
+	 */
+	public static String getDetail(String id) {
 		return "http://www.yidianzixun.com/mp/content?id=" + id;
 	}
 

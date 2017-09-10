@@ -14,5 +14,8 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface TbDetailsDao extends BaseDao<TbDetailsEntity> {
-	long queryMaxId();
+	int queryMaxId();
+
+	int queryIdExsts(int value);
+
 }

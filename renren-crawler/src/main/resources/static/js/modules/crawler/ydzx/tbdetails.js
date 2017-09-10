@@ -6,15 +6,15 @@ $(function () {
 			{ label: '编号', name: 'id', index: 'id', width: 50, key: true },			
 			{ label: '标题', name: 'title', index: 'title', width: 80 },  			
 			{ label: '简介', name: 'summary', index: 'summary', width: 80 }, 	
-			{ label: '正文内容', name: 'contextHtml', index: 'context_html', width: 80 }, 			
+			//{ label: '正文内容', name: 'contextHtml', index: 'context_html', width: 80 }, 			
 			{ label: '发布时间', name: 'date', index: 'date', width: 80 }, 	
-			{ label: '作者编号', name: 'authorId', index: 'author_id', width: 80 }, 					
+			{ label: '作者编号', name: 'authorId', index: 'author_id', width: 80 } 					
 			//{ label: '正文内容', name: 'contextText', index: 'context_text', width: 80 }, 			
 			//{ label: '分类', name: 'ctype', index: 'ctype', width: 80 }, 		
 			//{ label: '加密后url后缀', name: 'docid', index: 'docid', width: 80 }, 			
 			//{ label: '暂时未知分类', name: 'dtype', index: 'dtype', width: 80 }, 			
 			//{ label: '本文所拥有的图片', name: 'images', index: 'images', width: 80 },			
-			{ label: 'url', name: 'url', index: 'url', width: 80 }			
+			//{ label: 'url', name: 'url', index: 'url', width: 80 }			
         ],
 		viewrecords: true,
         height: 385,
@@ -47,7 +47,10 @@ var vm = new Vue({
 	el:'#rrapp',
 	data:{
 		showList: true,
+		showEdit:false,
+		showDetail:false,
 		title: null,
+		htmlContext:null,
 		tbDetails: {}
 	},
 	methods: {
@@ -56,8 +59,20 @@ var vm = new Vue({
 		},
 		add: function(){
 			vm.showList = false;
+			vm.showEdit = true;
+			vm.showDetail = false;
 			vm.title = "新增";
 			vm.tbDetails = {};
+		},
+		browse: function(){
+			var id = getSelectedRow();
+			if(id == null){
+				return ;
+			}
+			vm.showList = false;
+			vm.showEdit = false;
+			vm.showDetail = true;
+			vm.getInfo(id);
 		},
 		update: function (event) {
 			var id = getSelectedRow();
@@ -65,6 +80,8 @@ var vm = new Vue({
 				return ;
 			}
 			vm.showList = false;
+			vm.showEdit = true;
+			vm.showDetail = false;
             vm.title = "修改";
             
             vm.getInfo(id)
@@ -114,10 +131,13 @@ var vm = new Vue({
 		getInfo: function(id){
 			$.get(baseURL + "tbdetails/info/"+id, function(r){
                 vm.tbDetails = r.tbDetails;
+    			vm.htmlContext=r.tbDetails.contextHtml;
             });
 		},
 		reload: function (event) {
 			vm.showList = true;
+			vm.showEdit = false;
+			vm.showDetail = false;
 			var page = $("#jqGrid").jqGrid('getGridParam','page');
 			$("#jqGrid").jqGrid('setGridParam',{ 
                 page:page

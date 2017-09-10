@@ -1,13 +1,16 @@
 package io.renren.modules.crawler.ydzx.common;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jsoup.nodes.Document;
 
-import io.renren.common.utils.SpringContextUtils;
+import io.renren.modules.crawler.common.HttpClientUtil;
 import io.renren.modules.crawler.ydzx.entity.TbDetailsEntity;
 import io.renren.modules.crawler.ydzx.service.TbDetailsService;
+import io.renren.modules.crawler.ydzx.url.Url;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
-import us.codecraft.webmagic.Spider;
 import us.codecraft.webmagic.processor.PageProcessor;
 import us.codecraft.webmagic.selector.Selectable;
 
@@ -34,20 +37,42 @@ public class DetailMagic implements PageProcessor {
 	public void process(Page page) {
 		// 获取document对象
 		Document doc = page.getHtml().getDocument();
+		if (!doc.select("head title").text().equals("【一点资讯】为你私人定制的资讯客户端 - Yidianzixun.com")) {
+			String url = page.getUrl().toString();
+			String substring = url.substring(url.lastIndexOf('=') + 1, url.length());
+			Integer id = Integer.valueOf(substring);
+			List<String> pages=new ArrayList<>();
+			for (int i = 1; i <= 10; i++) {
+				id+=i;
+				String detail = Url.getDetail(id);
+				pages.add(detail);
+			}
+			page.addTargetRequests(pages);
+		}
+		
 		// 如果跳回首页 ，则表示没有这篇新闻
-		if (doc.select("body").attr("class").equals("page-index")
-				|| doc.select("head title").text().equals("【一点资讯】为你私人定制的资讯客户端 - Yidianzixun.com")) {
+		if (doc.select("body").attr("class").equals("page-index") || page.getStatusCode() == 304
+				|| !doc.select(".content-empty").text().equals("")) {
 			page.setSkip(true);
 			return;
-		} 
+		}
 
 		TbDetailsEntity comileDetail = EntityCompile.comileDetail(doc, page.getUrl().toString());
 
-//		TbDetailsService detailService = (TbDetailsService) SpringContextUtils.getBean("tbDetailsService");
-		//if(detailService!=null){
+		// 保存对象
 		detailService.save(comileDetail);
-		//}
 
+		List<String> images = EntityCompile.getImages(doc);
+		if (images != null && images.size() > 0) {
+			for (String url : images) {
+				try {
+					String fileName = url.substring(url.lastIndexOf("=") + 1, url.length());
+					HttpClientUtil.download(url, Header.header, "home/ydzx/images", fileName + ".png");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 	@Override
@@ -55,15 +80,4 @@ public class DetailMagic implements PageProcessor {
 		return site;
 	}
 
-	/*public static void main(String[] args) {
-
-		//Spider create = Spider.create(new DetailMagic());
-//		for (int i = 34018832; i < 34018851; i++) {
-//			create.addUrl("http://www.yidianzixun.com/mp/content?id=" + i);
-//		}
-		//create.thread(5).run();
-
-		Spider.create(new DetailMagic()).addUrl("http://www.yidianzixun.com/mp/content?id=34018837").thread(5).run();
-		
-	}*/
 }

@@ -19,7 +19,13 @@
         <result property="url" column="url"/>
     </resultMap>
 
-	<select id="queryMaxId" resultType="long">
+	
+	<!-- 查询id是否存在 -->
+	<select id="queryIdExsts" resultType="int">
+		select count(0) from tb_details where id=#{value}
+	</select>
+
+	<select id="queryMaxId" resultType="int">
 		select max(id) from tb_details
 	</select>
 
@@ -29,10 +35,10 @@
 
 	<select id="queryList" resultType="io.renren.modules.crawler.ydzx.entity.TbDetailsEntity">
 		select 
-		id,title,summary,context_html,date,author_id,url
+		id,title,summary,date,author_id
 		 from tb_details 
-		  where context_html is not null and context_html!=''
-       <!--  <choose>
+		 <!-- ,context_html ,url -->
+        <choose>
             <when test="sidx != null and sidx.trim() != ''">
                 order by ${sidx} ${order}
             </when>
@@ -42,8 +48,7 @@
         </choose>
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
-		</if> -->
-		limit 1,500
+		</if>
 	</select>
 	
  	<select id="queryTotal" resultType="int">

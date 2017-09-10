@@ -26,12 +26,13 @@
 			<a v-if="hasPermission('tbdetails:save')" class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
 			<a v-if="hasPermission('tbdetails:update')" class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
 			<a v-if="hasPermission('tbdetails:delete')" class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			<a class="btn btn-primary" @click="browse"><i class="fa fa-plus"></i>&nbsp;预览</a>
 		</div>
 	    <table id="jqGrid"></table>
 	    <div id="jqGridPager"></div>
     </div>
     
-    <div v-show="!showList" class="panel panel-default">
+    <div v-show="showEdit" class="panel panel-default">
 		<div class="panel-heading">{{title}}</div>
 		<form class="form-horizontal">
 											<div class="form-group">
@@ -107,6 +108,13 @@
 			</div>
 		</form>
 	</div>
+	
+    <div v-show="showDetail" class="panel panel-default">
+    	<div class="panel-heading">
+			<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+		</div>
+   		<div v-html="htmlContext"></div>
+    </div>
 </div>
 
 <script src="../../../js/modules/crawler/ydzx/tbdetails.js"></script>

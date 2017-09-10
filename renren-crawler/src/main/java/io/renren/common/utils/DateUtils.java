@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import io.renren.modules.oss.controller.SysOssController;
+
 /**
  * 日期处理
  * 
@@ -59,17 +61,15 @@ public class DateUtils {
 		cal.add(Calendar.HOUR, hour);
 		return cal.getTime();
 	}
+	
 
-	public static void main(String[] args) {
-		String date="5小时前";
-		// 截取 小时前
-		String substring = date.substring(0, date.indexOf("小时前"));
-		// 转换
-		int hour = Integer.valueOf(substring);
-		// 获取他的相反数
-		Date hoursAgoTime = DateUtils.getHoursAgoTime(0 - hour);
-		System.out.println(hoursAgoTime);
-		// 保存
-		//entity.setDate(hoursAgoTime);
+
+	public static Date getdayAgoTime(int day) {
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.FRIDAY, day);
+		return cal.getTime();
 	}
+	
+
+
 }

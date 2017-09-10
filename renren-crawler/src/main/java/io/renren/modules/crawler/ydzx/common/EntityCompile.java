@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import com.alibaba.fastjson.JSON;
@@ -31,10 +32,31 @@ public class EntityCompile {
 		Result result = news.getResult().get(0);
 		// 获取url
 		String url = result.getUrl();
-		System.out.println("当前的url是：" + url);
 		// 截取获取最新的id
 		String substring = url.substring(url.lastIndexOf('=') + 1, url.length());
 		return Long.valueOf(substring);
+	}
+
+	/***
+	 * 
+	 * @Description 获取文章里面的图片
+	 * @author lixin
+	 * @date 2017年9月10日
+	 * @param doc
+	 * @return
+	 */
+	public static List<String> getImages(Document doc) {
+		List<String> images = null;
+		Elements select = doc.select(".content-bd");
+		if (select != null && !select.text().equals("")) {
+			images = new ArrayList<String>();
+			Elements imgs = select.select("img");
+			for (Element element : imgs) {
+				String src = element.attr("src");
+				images.add(src);
+			}
+		}
+		return images;
 	}
 
 	/***
@@ -45,7 +67,7 @@ public class EntityCompile {
 	 * @param html
 	 * @return
 	 */
-	public static TbDetailsEntity comileDetail(String html, long id) {
+	public static TbDetailsEntity comileDetail(String html, int id) {
 		TbDetailsEntity entity = new TbDetailsEntity();
 		entity.setId(id);
 		Document doc = Jsoup.parse(html);
@@ -75,7 +97,7 @@ public class EntityCompile {
 		url = url.substring(url.lastIndexOf('=') + 1, url.length());
 
 		TbDetailsEntity entity = new TbDetailsEntity();
-		entity.setId(Long.valueOf(url));
+		entity.setId(Integer.valueOf(url));
 
 		// 标题
 		String title = doc.select(".left-wrapper h2").text();
@@ -91,12 +113,11 @@ public class EntityCompile {
 		entity.setContextText(context.text());
 
 		// 获取文章作者
-		String author = doc.select(".meta a").attr("href");
+		String author = doc.select(".right-wrapper .wemedia-wrapper a:eq(0)").attr("href");
 		author = author.substring(author.indexOf("m") + 1, author.length());
 		entity.setAuthorId(Integer.valueOf(author));
 
 		Elements select = doc.select(".left-wrapper .meta span");// 获取日期
-		System.out.println("MySize:"+select.size());
 		String date;
 		if (select.size() == 5) {
 			// 获取日期
@@ -105,10 +126,7 @@ public class EntityCompile {
 			date = doc.select(".left-wrapper .meta span:eq(2)").text();
 		}
 
-		System.out.println("mydate:" + date);
-		if (date.indexOf("小时前") == -1) {
-			entity.setDate(DateUtils.parse(date, "yyyy.MM.dd"));
-		} else {
+		if (date.indexOf("小时前") == 1) {
 			// 截取 小时前
 			String substring = date.substring(0, date.indexOf("小时前"));
 			// 转换
@@ -117,8 +135,24 @@ public class EntityCompile {
 			Date hoursAgoTime = DateUtils.getHoursAgoTime(0 - hour);
 			// 保存
 			entity.setDate(hoursAgoTime);
+		} else if (date.indexOf("天前") == 1) {
+			// 截取 小时前
+			String substring = date.substring(0, date.indexOf("天前"));
+			// 转换
+			int day = Integer.valueOf(substring);
+			// 获取他的相反数
+			Date dayAgoTime = DateUtils.getdayAgoTime(0 - day);
+			// 保存
+			entity.setDate(dayAgoTime);
+		} else if (date.indexOf("昨天") == 1) {
+			Date dayAgoTime = DateUtils.getdayAgoTime(-1);
+			entity.setDate(dayAgoTime);
+		} else if (date.indexOf("前天") == 1) {
+			Date dayAgoTime = DateUtils.getdayAgoTime(-2);
+			entity.setDate(dayAgoTime);
+		} else {
+			entity.setDate(DateUtils.parse(date, "yyyy.MM.dd"));
 		}
-
 		return entity;
 	}
 
@@ -190,7 +224,7 @@ public class EntityCompile {
 				TbDetailsEntity entity = new TbDetailsEntity();
 				String url = r.getUrl();
 				url = url.substring(url.lastIndexOf("=") + 1, url.length());
-				entity.setId(Long.valueOf(url));
+				entity.setId(Integer.valueOf(url));
 				entity.setAuthorId(Integer.valueOf(channel_id));
 				// entity.setContextHtml(contextHtml);
 				// entity.setContextText(contextText);

@@ -14,7 +14,7 @@ public class TbDetailsEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	//
-	private Long id;
+	private Integer id;
 	// 作者id
 	private Integer authorId;
 	// 正文内容带html标签
@@ -41,14 +41,14 @@ public class TbDetailsEntity implements Serializable {
 	/**
 	 * 设置：
 	 */
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 
 	/**
 	 * 获取：
 	 */
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 

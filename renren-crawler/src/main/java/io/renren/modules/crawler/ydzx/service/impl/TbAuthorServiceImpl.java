@@ -1,5 +1,7 @@
 package io.renren.modules.crawler.ydzx.service.impl;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -108,10 +110,29 @@ public class TbAuthorServiceImpl implements TbAuthorService {
 					List<TbDetailsEntity> comile = EntityCompile.comileDetails(json);
 					for (TbDetailsEntity tbDetailsEntity : comile) {
 						try {
+							String html = HttpClientUtil.get(tbDetailsEntity.getUrl(), Header.header);
+							Document doc = Jsoup.parse(html);
+							String contenthtml = doc.select(".content-bd").html();
+							String contenttext = doc.select(".content-bd").text();
+							tbDetailsEntity.setContextHtml(contenthtml);
+							tbDetailsEntity.setContextText(contenttext);
+							List<String> images = EntityCompile.getImages(doc);
+							if (images != null && images.size() > 0) {
+								for (String url : images) {
+									try {
+										String fileName = url.substring(url.lastIndexOf("=") + 1, url.length());
+										HttpClientUtil.download(url, Header.header, "home/ydzx/images", fileName+".png");
+									} catch (Exception e) {
+										e.printStackTrace();
+									}
+								}
+							}
+						} catch (Exception e) {
+						}
+						try {
 							tbDetailsDao.save(tbDetailsEntity);
 							count++;
 						} catch (Exception e) {
-							// TODO: handle exception
 						}
 					}
 					count = chirden(comile, id, page, count);
