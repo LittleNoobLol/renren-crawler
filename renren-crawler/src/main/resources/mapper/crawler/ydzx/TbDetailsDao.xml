@@ -61,30 +61,26 @@
 			`id`, 
 			`author_id`, 
 			`context_html`, 
-			`context_text`, 
 			`ctype`, 
 			`date`, 
 			`docid`, 
 			`dtype`, 
 			`images`, 
 			`summary`, 
-			`title`, 
-			`url`
+			`title`
 		)
 		values
 		(
 			#{id}, 
 			#{authorId}, 
 			#{contextHtml}, 
-			#{contextText}, 
 			#{ctype}, 
 			#{date}, 
 			#{docid}, 
 			#{dtype}, 
 			#{images}, 
 			#{summary}, 
-			#{title}, 
-			#{url}
+			#{title}
 		)
 	</insert>
 	 
@@ -100,8 +96,7 @@
 			<if test="dtype != null">`dtype` = #{dtype}, </if>
 			<if test="images != null">`images` = #{images}, </if>
 			<if test="summary != null">`summary` = #{summary}, </if>
-			<if test="title != null">`title` = #{title}, </if>
-			<if test="url != null">`url` = #{url}</if>
+			<if test="title != null">`title` = #{title} </if>
 		</set>
 		where id = #{id}
 	</update>

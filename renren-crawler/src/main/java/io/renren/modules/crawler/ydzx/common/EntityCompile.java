@@ -75,7 +75,6 @@ public class EntityCompile {
 		// 文章正文内容
 		Elements context = doc.select(".content-bd");
 		entity.setContextHtml(context.html());
-		entity.setContextText(context.text());
 
 		// 获取文章作者
 		String author = doc.select(".meta a").attr("href");
@@ -110,7 +109,6 @@ public class EntityCompile {
 		// 文章正文内容
 		Elements context = doc.select(".content-bd");
 		entity.setContextHtml(context.html());
-		entity.setContextText(context.text());
 
 		// 获取文章作者
 		String author = doc.select(".right-wrapper .wemedia-wrapper a:eq(0)").attr("href");
@@ -231,7 +229,6 @@ public class EntityCompile {
 				entity.setCtype(r.getCtype());
 				entity.setDate(DateUtils.parse(r.getDate()));
 				entity.setDocid(r.getDocid());
-				entity.setDtype(r.getDtype());
 				entity.setImages(r.getImage());
 				entity.setSummary(r.getSummary());
 				entity.setTitle(r.getTitle());

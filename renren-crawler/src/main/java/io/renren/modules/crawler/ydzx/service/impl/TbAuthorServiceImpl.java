@@ -115,7 +115,6 @@ public class TbAuthorServiceImpl implements TbAuthorService {
 							String contenthtml = doc.select(".content-bd").html();
 							String contenttext = doc.select(".content-bd").text();
 							tbDetailsEntity.setContextHtml(contenthtml);
-							tbDetailsEntity.setContextText(contenttext);
 							List<String> images = EntityCompile.getImages(doc);
 							if (images != null && images.size() > 0) {
 								for (String url : images) {

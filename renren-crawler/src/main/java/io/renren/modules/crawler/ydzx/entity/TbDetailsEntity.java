@@ -19,23 +19,19 @@ public class TbDetailsEntity implements Serializable {
 	private Integer authorId;
 	// 正文内容带html标签
 	private String contextHtml;
-	// 正文内容
-	private String contextText;
 	// 分类
 	private String ctype;
 	// 发布时间
 	private Date date;
 	// 加密后url后缀
 	private String docid;
-	// 暂时未知分类
-	private Integer dtype;
 	// 本文所拥有的图片
 	private String images;
 	// 简介
 	private String summary;
 	// 标题
 	private String title;
-	// 未加密的完整url
+	// 页面url
 	private String url;
 
 	/**
@@ -80,19 +76,6 @@ public class TbDetailsEntity implements Serializable {
 		return contextHtml;
 	}
 
-	/**
-	 * 设置：正文内容
-	 */
-	public void setContextText(String contextText) {
-		this.contextText = contextText;
-	}
-
-	/**
-	 * 获取：正文内容
-	 */
-	public String getContextText() {
-		return contextText;
-	}
 
 	/**
 	 * 设置：分类
@@ -134,20 +117,6 @@ public class TbDetailsEntity implements Serializable {
 	 */
 	public String getDocid() {
 		return docid;
-	}
-
-	/**
-	 * 设置：暂时未知分类
-	 */
-	public void setDtype(Integer dtype) {
-		this.dtype = dtype;
-	}
-
-	/**
-	 * 获取：暂时未知分类
-	 */
-	public Integer getDtype() {
-		return dtype;
 	}
 
 	/**
@@ -206,13 +175,5 @@ public class TbDetailsEntity implements Serializable {
 		return url;
 	}
 
-	@Override
-	public String toString() {
-		return "TbDetailsEntity [id=" + id + ", authorId=" + authorId + ", contextHtml=" + contextHtml
-				+ ", contextText=" + contextText + ", ctype=" + ctype + ", date=" + date + ", docid=" + docid
-				+ ", dtype=" + dtype + ", images=" + images + ", summary=" + summary + ", title=" + title + ", url="
-				+ url + "]";
-	}
-	
 	
 }

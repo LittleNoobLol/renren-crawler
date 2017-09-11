@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.jsoup.nodes.Document;
 
+import io.renren.common.utils.SpringContextUtils;
 import io.renren.modules.crawler.common.HttpClientUtil;
 import io.renren.modules.crawler.ydzx.entity.TbDetailsEntity;
 import io.renren.modules.crawler.ydzx.service.TbDetailsService;
@@ -19,11 +20,7 @@ public class DetailMagic implements PageProcessor {
 	public DetailMagic() {
 	}
 
-	public DetailMagic(TbDetailsService detailService) {
-		this.detailService = detailService;
-	}
 
-	private TbDetailsService detailService;
 	private Site site = Site.me()
 			.addHeader("User-Agent",
 					"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36")
@@ -59,6 +56,7 @@ public class DetailMagic implements PageProcessor {
 
 		TbDetailsEntity comileDetail = EntityCompile.comileDetail(doc, page.getUrl().toString());
 
+		TbDetailsService detailService = (TbDetailsService) SpringContextUtils.getBean("tbDetailsService");
 		// 保存对象
 		detailService.save(comileDetail);
 
