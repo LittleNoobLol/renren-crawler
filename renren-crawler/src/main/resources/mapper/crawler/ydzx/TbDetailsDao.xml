@@ -12,7 +12,6 @@
         <result property="ctype" column="ctype"/>
         <result property="date" column="date"/>
         <result property="docid" column="docid"/>
-        <result property="dtype" column="dtype"/>
         <result property="images" column="images"/>
         <result property="summary" column="summary"/>
         <result property="title" column="title"/>
@@ -64,7 +63,6 @@
 			`ctype`, 
 			`date`, 
 			`docid`, 
-			`dtype`, 
 			`images`, 
 			`summary`, 
 			`title`
@@ -77,7 +75,6 @@
 			#{ctype}, 
 			#{date}, 
 			#{docid}, 
-			#{dtype}, 
 			#{images}, 
 			#{summary}, 
 			#{title}
@@ -93,7 +90,6 @@
 			<if test="ctype != null">`ctype` = #{ctype}, </if>
 			<if test="date != null">`date` = #{date}, </if>
 			<if test="docid != null">`docid` = #{docid}, </if>
-			<if test="dtype != null">`dtype` = #{dtype}, </if>
 			<if test="images != null">`images` = #{images}, </if>
 			<if test="summary != null">`summary` = #{summary}, </if>
 			<if test="title != null">`title` = #{title} </if>

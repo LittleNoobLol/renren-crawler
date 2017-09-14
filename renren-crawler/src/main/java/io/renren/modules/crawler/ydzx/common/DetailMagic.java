@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jsoup.nodes.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.renren.common.utils.SpringContextUtils;
 import io.renren.modules.crawler.common.HttpClientUtil;
@@ -17,9 +19,10 @@ import us.codecraft.webmagic.selector.Selectable;
 
 public class DetailMagic implements PageProcessor {
 
+	private Logger logger = LoggerFactory.getLogger(DetailMagic.class);
+	
 	public DetailMagic() {
 	}
-
 
 	private Site site = Site.me()
 			.addHeader("User-Agent",
@@ -49,7 +52,7 @@ public class DetailMagic implements PageProcessor {
 		
 		// 如果跳回首页 ，则表示没有这篇新闻
 		if (doc.select("body").attr("class").equals("page-index") || page.getStatusCode() == 304
-				|| !doc.select(".content-empty").text().equals("")) {
+				|| !doc.select(".content-empty").text().equals("") || doc.select("head title").text().equals("【一点资讯】为你私人定制的资讯客户端 - Yidianzixun.com")) {
 			page.setSkip(true);
 			return;
 		}
@@ -67,7 +70,7 @@ public class DetailMagic implements PageProcessor {
 					String fileName = url.substring(url.lastIndexOf("=") + 1, url.length());
 					HttpClientUtil.download(url, Header.header, "home/ydzx/images", fileName + ".png");
 				} catch (Exception e) {
-					e.printStackTrace();
+					logger.error("magic下载图片异常",e);
 				}
 			}
 		}

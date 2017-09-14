@@ -68,7 +68,7 @@ public class RenrenApplicationTests {
 		int start = detailService.queryMaxId() + 1;
 		int end = start + 30;
 		// 创建magic爬虫
-		Spider create = Spider.create(new DetailMagic(detailService));
+		Spider create = Spider.create(new DetailMagic());
 		// 添加url
 		for (int i = start; i <= end; i++) {
 			create.addUrl("http://www.yidianzixun.com/mp/content?id=" + i);
@@ -91,13 +91,13 @@ public class RenrenApplicationTests {
 		detailService.save(entit);
 
 		// 创建magic爬虫
-		Spider create = Spider.create(new DetailMagic(detailService));
+		Spider create = Spider.create(new DetailMagic());
 		// 添加url
 		for (int i = 35070533; i <= 35070733; i++) {
 			if (i % 10000 == 0) {
 				create.thread(50).run();
 				detailService = (TbDetailsService) SpringContextUtils.getBean("tbDetailsService");
-				create = Spider.create(new DetailMagic(detailService));
+				create = Spider.create(new DetailMagic());
 			}
 			create.addUrl("http://www.yidianzixun.com/mp/content?id=" + i);
 
