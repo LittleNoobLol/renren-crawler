@@ -1,4 +1,4 @@
-package io.renren.modules.crawler.ydzx.controller;
+package io.renren.modules.wp.controller;
 
 import java.util.List;
 import java.util.Map;
@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.renren.modules.crawler.ydzx.entity.TbDetailsEntity;
-import io.renren.modules.crawler.ydzx.service.TbDetailsService;
+import io.renren.modules.wp.entity.PostsEntity;
+import io.renren.modules.wp.service.PostsService;
 import io.renren.common.utils.PageUtils;
 import io.renren.common.utils.Query;
 import io.renren.common.utils.R;
@@ -23,29 +24,43 @@ import io.renren.common.utils.R;
 /**
  * 
  * 
- * @author xin
- * @email 531968207@qq.com
- * @date 2017-09-05 10:17:11
+ * @author lixin
+ * @email 
+ * @date 2017-09-18 10:39:55
  */
 @RestController
-@RequestMapping("tbdetails")
-public class TbDetailsController {
+@RequestMapping("wp")
+public class PostsController {
 	@Autowired
-	private TbDetailsService tbDetailsService;
+	private PostsService postsService;
+	
+	
+	/****
+	 * 发布文章
+	 * @param tbDetails
+	 * @return
+	 */
+	public R publish(@RequestBody TbDetailsEntity tbDetails){
+		
+		
+		
+		return R.ok();
+	}
+	
 	
 	/**
 	 * 列表
 	 */
 	@RequestMapping("/list")
-	@RequiresPermissions("tbdetails:list")
+	@RequiresPermissions("posts:list")
 	public R list(@RequestParam Map<String, Object> params){
 		//查询列表数据
         Query query = new Query(params);
 
-		List<TbDetailsEntity> tbDetailsList = tbDetailsService.queryList(query);
-		int total = tbDetailsService.queryTotal(query);
+		List<PostsEntity> postsList = postsService.queryList(query);
+		int total = postsService.queryTotal(query);
 		
-		PageUtils pageUtil = new PageUtils(tbDetailsList, total, query.getLimit(), query.getPage());
+		PageUtils pageUtil = new PageUtils(postsList, total, query.getLimit(), query.getPage());
 		
 		return R.ok().put("page", pageUtil);
 	}
@@ -55,20 +70,20 @@ public class TbDetailsController {
 	 * 信息
 	 */
 	@RequestMapping("/info/{id}")
-	@RequiresPermissions("tbdetails:info")
+	@RequiresPermissions("posts:info")
 	public R info(@PathVariable("id") Long id){
-		TbDetailsEntity tbDetails = tbDetailsService.queryObject(id);
+		PostsEntity posts = postsService.queryObject(id);
 		
-		return R.ok().put("tbDetails", tbDetails);
+		return R.ok().put("posts", posts);
 	}
 	
 	/**
 	 * 保存
 	 */
 	@RequestMapping("/save")
-	@RequiresPermissions("tbdetails:save")
-	public R save(@RequestBody TbDetailsEntity tbDetails){
-		tbDetailsService.save(tbDetails);
+	@RequiresPermissions("posts:save")
+	public R save(@RequestBody PostsEntity posts){
+		postsService.save(posts);
 		
 		return R.ok();
 	}
@@ -77,9 +92,9 @@ public class TbDetailsController {
 	 * 修改
 	 */
 	@RequestMapping("/update")
-	@RequiresPermissions("tbdetails:update")
-	public R update(@RequestBody TbDetailsEntity tbDetails){
-		tbDetailsService.update(tbDetails);
+	@RequiresPermissions("posts:update")
+	public R update(@RequestBody PostsEntity posts){
+		postsService.update(posts);
 		
 		return R.ok();
 	}
@@ -88,13 +103,11 @@ public class TbDetailsController {
 	 * 删除
 	 */
 	@RequestMapping("/delete")
-	@RequiresPermissions("tbdetails:delete")
+	@RequiresPermissions("posts:delete")
 	public R delete(@RequestBody Long[] ids){
-		tbDetailsService.deleteBatch(ids);
+		postsService.deleteBatch(ids);
 		
 		return R.ok();
 	}
-	
-	
 	
 }

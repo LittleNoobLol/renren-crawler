@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.wp.dao.PostsDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.wp.entity.PostsEntity" id="postsMap">
+        <result property="id" column="ID"/>
+        <result property="postAuthor" column="post_author"/>
+        <result property="postDate" column="post_date"/>
+        <result property="postDateGmt" column="post_date_gmt"/>
+        <result property="postContent" column="post_content"/>
+        <result property="postTitle" column="post_title"/>
+        <result property="postExcerpt" column="post_excerpt"/>
+        <result property="postStatus" column="post_status"/>
+        <result property="commentStatus" column="comment_status"/>
+        <result property="pingStatus" column="ping_status"/>
+        <result property="postPassword" column="post_password"/>
+        <result property="postName" column="post_name"/>
+        <result property="toPing" column="to_ping"/>
+        <result property="pinged" column="pinged"/>
+        <result property="postModified" column="post_modified"/>
+        <result property="postModifiedGmt" column="post_modified_gmt"/>
+        <result property="postContentFiltered" column="post_content_filtered"/>
+        <result property="postParent" column="post_parent"/>
+        <result property="guid" column="guid"/>
+        <result property="menuOrder" column="menu_order"/>
+        <result property="postType" column="post_type"/>
+        <result property="postMimeType" column="post_mime_type"/>
+        <result property="commentCount" column="comment_count"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="io.renren.modules.wp.entity.PostsEntity">
+		select * from wp_posts where ID = #{value}
+	</select>
+
+	<select id="queryMaxId" resultType="int">
+			select max(id) from wp_posts
+	</select>
+	
+	<select id="queryList" resultType="io.renren.modules.wp.entity.PostsEntity">
+		select * from wp_posts
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by ID desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from wp_posts 
+	</select>
+	 
+	<insert id="save" parameterType="io.renren.modules.wp.entity.PostsEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into wp_posts
+		(
+			`post_author`, 
+			`post_date`, 
+			`post_date_gmt`, 
+			`post_content`, 
+			`post_title`, 
+			`post_excerpt`, 
+			`post_status`, 
+			`comment_status`, 
+			`ping_status`, 
+			`post_password`, 
+			`post_name`, 
+			`to_ping`, 
+			`pinged`, 
+			`post_modified`, 
+			`post_modified_gmt`, 
+			`post_content_filtered`, 
+			`post_parent`, 
+			`guid`, 
+			`menu_order`, 
+			`post_type`, 
+			`post_mime_type`, 
+			`comment_count`
+		)
+		values
+		(
+			1, 
+			sysdate(), 
+			sysdate(), 
+			#{postContent}, 
+			#{postTitle}, 
+			'', 
+			'publish', 
+			'open', 
+			'open', 
+			'', 
+			#{postName}, 
+			'', 
+			'', 
+			sysdate(), 
+			sysdate(), 
+			'', 
+			0, 
+			#{guid}, 
+			0, 
+			'post', 
+			'', 
+			0
+		)
+	</insert>
+	 
+	<update id="update" parameterType="io.renren.modules.wp.entity.PostsEntity">
+		update wp_posts 
+		<set>
+			<if test="postAuthor != null">`post_author` = #{postAuthor}, </if>
+			<if test="postDate != null">`post_date` = #{postDate}, </if>
+			<if test="postDateGmt != null">`post_date_gmt` = #{postDateGmt}, </if>
+			<if test="postContent != null">`post_content` = #{postContent}, </if>
+			<if test="postTitle != null">`post_title` = #{postTitle}, </if>
+			<if test="postExcerpt != null">`post_excerpt` = #{postExcerpt}, </if>
+			<if test="postStatus != null">`post_status` = #{postStatus}, </if>
+			<if test="commentStatus != null">`comment_status` = #{commentStatus}, </if>
+			<if test="pingStatus != null">`ping_status` = #{pingStatus}, </if>
+			<if test="postPassword != null">`post_password` = #{postPassword}, </if>
+			<if test="postName != null">`post_name` = #{postName}, </if>
+			<if test="toPing != null">`to_ping` = #{toPing}, </if>
+			<if test="pinged != null">`pinged` = #{pinged}, </if>
+			<if test="postModified != null">`post_modified` = #{postModified}, </if>
+			<if test="postModifiedGmt != null">`post_modified_gmt` = #{postModifiedGmt}, </if>
+			<if test="postContentFiltered != null">`post_content_filtered` = #{postContentFiltered}, </if>
+			<if test="postParent != null">`post_parent` = #{postParent}, </if>
+			<if test="guid != null">`guid` = #{guid}, </if>
+			<if test="menuOrder != null">`menu_order` = #{menuOrder}, </if>
+			<if test="postType != null">`post_type` = #{postType}, </if>
+			<if test="postMimeType != null">`post_mime_type` = #{postMimeType}, </if>
+			<if test="commentCount != null">`comment_count` = #{commentCount}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from wp_posts where ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from wp_posts where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

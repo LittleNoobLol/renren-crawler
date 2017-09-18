@@ -27,6 +27,7 @@
 			<a v-if="hasPermission('tbdetails:update')" class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
 			<a v-if="hasPermission('tbdetails:delete')" class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
 			<a class="btn btn-primary" @click="browse"><i class="fa fa-plus"></i>&nbsp;预览</a>
+			<a class="btn btn-primary" @click="publish"><i class="fa fa-plus"></i>&nbsp;发布文章</a>
 		</div>
 	    <table id="jqGrid"></table>
 	    <div id="jqGridPager"></div>

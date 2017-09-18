@@ -64,6 +64,28 @@ var vm = new Vue({
 			vm.title = "新增";
 			vm.tbDetails = {};
 		},
+		// 发布文章
+		publish: function(){
+			var id = getSelectedRow();
+			if(id == null){
+				return ;
+			}
+			$.ajax({
+				type: "POST",
+			    url: baseURL + 'tbdetails/',
+                contentType: "application/json",
+			    data: JSON.stringify(vm.tbDetails),
+			    success: function(r){
+			    	if(r.code === 0){
+						alert('操作成功', function(index){
+							vm.reload();
+						});
+					}else{
+						alert(r.msg);
+					}
+				}
+			});
+		},
 		browse: function(){
 			var id = getSelectedRow();
 			if(id == null){
