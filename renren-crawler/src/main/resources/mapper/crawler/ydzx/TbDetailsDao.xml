@@ -8,7 +8,6 @@
         <result property="id" column="id"/>
         <result property="authorId" column="author_id"/>
         <result property="contextHtml" column="context_html"/>
-        <result property="contextText" column="context_text"/>
         <result property="ctype" column="ctype"/>
         <result property="date" column="date"/>
         <result property="docid" column="docid"/>
@@ -86,7 +85,6 @@
 		<set>
 			<if test="authorId != null">`author_id` = #{authorId}, </if>
 			<if test="contextHtml != null">`context_html` = #{contextHtml}, </if>
-			<if test="contextText != null">`context_text` = #{contextText}, </if>
 			<if test="ctype != null">`ctype` = #{ctype}, </if>
 			<if test="date != null">`date` = #{date}, </if>
 			<if test="docid != null">`docid` = #{docid}, </if>

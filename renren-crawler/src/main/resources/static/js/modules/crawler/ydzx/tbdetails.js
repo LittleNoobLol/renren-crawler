@@ -72,9 +72,8 @@ var vm = new Vue({
 			}
 			$.ajax({
 				type: "POST",
-			    url: baseURL + 'tbdetails/',
+			    url: baseURL + 'wp/publish/'+id,
                 contentType: "application/json",
-			    data: JSON.stringify(vm.tbDetails),
 			    success: function(r){
 			    	if(r.code === 0){
 						alert('操作成功', function(index){

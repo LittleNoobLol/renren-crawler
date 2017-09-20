@@ -1,28 +1,18 @@
 package io.renren.modules.job.task;
 
 import io.renren.modules.crawler.common.HttpClientUtil;
-import io.renren.common.utils.SpringContextUtils;
-import io.renren.modules.crawler.ydzx.common.YdzxCommon;
-import io.renren.modules.crawler.ydzx.common.DetailMagic;
 import io.renren.modules.crawler.ydzx.common.EntityCompile;
 import io.renren.modules.crawler.ydzx.common.Header;
-import io.renren.modules.crawler.ydzx.common.entity.NewsJson;
-import io.renren.modules.crawler.ydzx.common.entity.Result;
-import io.renren.modules.crawler.ydzx.entity.TbAuthorEntity;
 import io.renren.modules.crawler.ydzx.entity.TbDetailsEntity;
 import io.renren.modules.crawler.ydzx.service.TbDetailsService;
 import io.renren.modules.crawler.ydzx.url.Url;
-import us.codecraft.webmagic.Spider;
 
-import java.util.List;
-
-import javax.swing.text.html.parser.Entity;
-
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import com.alibaba.fastjson.JSON;
 
 /**
  * 
@@ -31,21 +21,45 @@ import com.alibaba.fastjson.JSON;
  */
 @Component("testTask")
 public class TestTask {
-	private Logger logger = LoggerFactory.getLogger(getClass());
+	
+	@Autowired
+	private TbDetailsService service;
 
 	public void test(String params) {
-		TbDetailsService detailService = (TbDetailsService) SpringContextUtils.getBean("tbDetailsService");
-		// 获取链接对象
-		int start = detailService.queryMaxId() + 1;
-		int end = start + 30;
-		// 创建magic爬虫
-		Spider create = Spider.create(new DetailMagic());
-		// 添加url
-		for (int i = start; i <= end; i++) {
-			create.addUrl("http://www.yidianzixun.com/mp/content?id=" + i);
+		int count = 100;
+		try {
+			// 尝试转换值
+			count=Integer.valueOf(params);
+		} catch (Exception e) {
 		}
-		// 设置线程数并启动
-		create.thread(30).run();
+		
+		boolean flag=true;
+		int success = 0;
+		// 获取上次的id
+		int queryMaxId = service.queryMaxId();
+		while(flag){
+			queryMaxId++;
+			try {
+				String url = Url.getDetail(queryMaxId);
+				System.out.print("當前url:"+url);
+				String html = HttpClientUtil.get(url, Header.header);
+				Document doc=Jsoup.parse(html);
+				TbDetailsEntity detail = EntityCompile.comileDetail(doc, url);
+				
+				boolean save = service.save(detail);
+				if(save){
+					success++;
+					System.out.println(",保存成功");
+				}
+			} catch (Exception e) {
+				//e.printStackTrace();
+				System.out.println(",保存失败");
+			}
+			// 如果数据已经抓取完毕了,就退出循环
+			if(success >= count){
+				flag = false;
+			}
+		}
 	}
 
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.renren.modules.crawler.ydzx.entity.TbDetailsEntity;
+import io.renren.modules.crawler.ydzx.service.TbDetailsService;
 import io.renren.modules.wp.entity.PostsEntity;
 import io.renren.modules.wp.service.PostsService;
 import io.renren.common.utils.PageUtils;
@@ -33,18 +34,21 @@ import io.renren.common.utils.R;
 public class PostsController {
 	@Autowired
 	private PostsService postsService;
-	
+
+	@Autowired
+	private TbDetailsService tbDetailsService;
 	
 	/****
 	 * 发布文章
 	 * @param tbDetails
 	 * @return
 	 */
-	public R publish(@RequestBody TbDetailsEntity tbDetails){
+	@RequestMapping("/publish/{id}")
+	public R publish(@PathVariable("id") Long id){
+		TbDetailsEntity tbDetail = tbDetailsService.queryObject(id);
 		
-		
-		
-		return R.ok();
+		postsService.publish(tbDetail);
+		return R.ok("发布成功");
 	}
 	
 	

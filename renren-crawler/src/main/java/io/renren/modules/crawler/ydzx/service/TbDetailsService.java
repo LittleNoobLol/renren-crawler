@@ -22,7 +22,7 @@ public interface TbDetailsService {
 	
 	int queryTotal(Map<String, Object> map);
 	
-	void save(TbDetailsEntity tbDetails);
+	boolean save(TbDetailsEntity tbDetails);
 	
 	void update(TbDetailsEntity tbDetails);
 	

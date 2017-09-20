@@ -8,14 +8,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.renren.common.utils.SpringContextUtils;
-import io.renren.modules.crawler.common.HttpClientUtil;
 import io.renren.modules.crawler.ydzx.entity.TbDetailsEntity;
 import io.renren.modules.crawler.ydzx.service.TbDetailsService;
 import io.renren.modules.crawler.ydzx.url.Url;
 import us.codecraft.webmagic.Page;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.processor.PageProcessor;
-import us.codecraft.webmagic.selector.Selectable;
 
 public class DetailMagic implements PageProcessor {
 
@@ -63,7 +61,7 @@ public class DetailMagic implements PageProcessor {
 		// 保存对象
 		detailService.save(comileDetail);
 
-		List<String> images = EntityCompile.getImages(doc);
+		/*List<String> images = EntityCompile.getImages(doc);
 		if (images != null && images.size() > 0) {
 			for (String url : images) {
 				try {
@@ -73,7 +71,7 @@ public class DetailMagic implements PageProcessor {
 					logger.error("magic下载图片异常",e);
 				}
 			}
-		}
+		}*/
 	}
 
 	@Override

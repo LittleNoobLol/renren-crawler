@@ -31,18 +31,19 @@ public class TbDetailsServiceImpl implements TbDetailsService {
 	}
 
 	@Override
-	public void save(TbDetailsEntity tbDetails) {
+	public boolean save(TbDetailsEntity tbDetails) {
 		if(tbDetails.getContextHtml()==null || tbDetails.getContextHtml().trim().equals("")){
-			return;
+			return false;
 		}
 		// 查询数据库是否有值
-		int exts = tbDetailsDao.queryIdExsts(tbDetails.getId());
+		// int exts = tbDetailsDao.queryIdExsts(tbDetails.getId());
 		// 做更新或者新增
-		if (exts == 1) {
-			tbDetailsDao.update(tbDetails);
-		} else {
+		//if (exts == 1) {
+			//tbDetailsDao.update(tbDetails);
+		//} else {
 			tbDetailsDao.save(tbDetails);
-		}
+			return true;
+		//}
 	}
 
 	@Override
