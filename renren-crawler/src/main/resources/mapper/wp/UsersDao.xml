@@ -16,6 +16,10 @@
         <result property="userStatus" column="user_status"/>
         <result property="displayName" column="display_name"/>
     </resultMap>
+    
+    <select id="queryAuthorName" resultType="io.renren.modules.wp.entity.UsersEntity">
+		 select id from wp_users where user_login = #{value}
+	</select>
 
 	<select id="queryObject" resultType="io.renren.modules.wp.entity.UsersEntity">
 		select * from wp_users where ID = #{value}

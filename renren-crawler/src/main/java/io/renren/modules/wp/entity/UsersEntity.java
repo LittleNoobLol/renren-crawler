@@ -14,6 +14,21 @@ import java.util.Date;
 public class UsersEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
+	public UsersEntity(){}
+	
+	public UsersEntity(String userLogin, String userPass, String userNicename, String userEmail, String userUrl,
+			Date userRegistered, String userActivationKey, Integer userStatus, String displayName) {
+		this.userLogin = userLogin;
+		this.userPass = userPass;
+		this.userNicename = userNicename;
+		this.userEmail = userEmail;
+		this.userUrl = userUrl;
+		this.userRegistered = userRegistered;
+		this.userActivationKey = userActivationKey;
+		this.userStatus = userStatus;
+		this.displayName = displayName;
+	}
+	
 	//
 	private Long id;
 	//

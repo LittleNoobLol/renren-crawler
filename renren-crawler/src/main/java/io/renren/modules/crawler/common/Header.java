@@ -1,4 +1,4 @@
-package io.renren.modules.crawler.ydzx.common;
+package io.renren.modules.crawler.common;
 
 import java.util.HashMap;
 import java.util.Map;

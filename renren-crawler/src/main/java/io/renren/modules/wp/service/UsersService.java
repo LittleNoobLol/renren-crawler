@@ -27,4 +27,6 @@ public interface UsersService {
 	void delete(Long id);
 	
 	void deleteBatch(Long[] ids);
+	
+	Long getAuthorId(String authorName);
 }
