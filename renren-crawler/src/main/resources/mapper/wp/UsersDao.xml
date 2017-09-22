@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="io.renren.modules.wp.dao.UsersDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="io.renren.modules.wp.entity.UsersEntity" id="usersMap">
+        <result property="id" column="ID"/>
+        <result property="userLogin" column="user_login"/>
+        <result property="userPass" column="user_pass"/>
+        <result property="userNicename" column="user_nicename"/>
+        <result property="userEmail" column="user_email"/>
+        <result property="userUrl" column="user_url"/>
+        <result property="userRegistered" column="user_registered"/>
+        <result property="userActivationKey" column="user_activation_key"/>
+        <result property="userStatus" column="user_status"/>
+        <result property="displayName" column="display_name"/>
+    </resultMap>
+
+	<select id="queryObject" resultType="io.renren.modules.wp.entity.UsersEntity">
+		select * from wp_users where ID = #{value}
+	</select>
+
+	<select id="queryList" resultType="io.renren.modules.wp.entity.UsersEntity">
+		select * from wp_users
+        <choose>
+            <when test="sidx != null and sidx.trim() != ''">
+                order by ${sidx} ${order}
+            </when>
+			<otherwise>
+                order by ID desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="queryTotal" resultType="int">
+		select count(*) from wp_users 
+	</select>
+	 
+	<insert id="save" parameterType="io.renren.modules.wp.entity.UsersEntity" useGeneratedKeys="true" keyProperty="id">
+		insert into wp_users
+		(
+			`user_login`, 
+			`user_pass`, 
+			`user_nicename`, 
+			`user_email`, 
+			`user_url`, 
+			`user_registered`, 
+			`user_activation_key`, 
+			`user_status`, 
+			`display_name`
+		)
+		values
+		(
+			#{userLogin}, 
+			#{userPass}, 
+			#{userNicename}, 
+			#{userEmail}, 
+			#{userUrl}, 
+			#{userRegistered}, 
+			#{userActivationKey}, 
+			#{userStatus}, 
+			#{displayName}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="io.renren.modules.wp.entity.UsersEntity">
+		update wp_users 
+		<set>
+			<if test="userLogin != null">`user_login` = #{userLogin}, </if>
+			<if test="userPass != null">`user_pass` = #{userPass}, </if>
+			<if test="userNicename != null">`user_nicename` = #{userNicename}, </if>
+			<if test="userEmail != null">`user_email` = #{userEmail}, </if>
+			<if test="userUrl != null">`user_url` = #{userUrl}, </if>
+			<if test="userRegistered != null">`user_registered` = #{userRegistered}, </if>
+			<if test="userActivationKey != null">`user_activation_key` = #{userActivationKey}, </if>
+			<if test="userStatus != null">`user_status` = #{userStatus}, </if>
+			<if test="displayName != null">`display_name` = #{displayName}</if>
+		</set>
+		where ID = #{id}
+	</update>
+	
+	<delete id="delete">
+		delete from wp_users where ID = #{value}
+	</delete>
+	
+	<delete id="deleteBatch">
+		delete from wp_users where ID in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>
