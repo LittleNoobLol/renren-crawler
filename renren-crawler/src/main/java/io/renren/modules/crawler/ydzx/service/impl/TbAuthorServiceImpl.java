@@ -5,6 +5,7 @@ import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -29,6 +30,9 @@ public class TbAuthorServiceImpl implements TbAuthorService {
 	private TbAuthorDao tbAuthorDao;
 	@Autowired
 	private TbDetailsService tbDetailsService;
+
+	@Value("${image.savepath}")
+	private String savePath;
 
 	private Logger logger = LoggerFactory.getLogger(TbAuthorServiceImpl.class);
 
@@ -143,7 +147,7 @@ public class TbAuthorServiceImpl implements TbAuthorService {
 								for (String url : images) {
 									try {
 										String fileName = url.substring(url.lastIndexOf("=") + 1, url.length());
-										HttpClientUtil.download(url, Header.header, "home/ydzx/images", fileName+".png");
+										HttpClientUtil.download(url, Header.header, savePath, fileName);
 									} catch (Exception e) {
 										e.printStackTrace();
 									}

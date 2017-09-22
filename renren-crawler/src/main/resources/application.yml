@@ -43,3 +43,8 @@ mybatis:
     mapperLocations: classpath:mapper/**/*.xml
     configLocation: classpath:mybatis.xml
 
+image:
+    savepath : 2017/
+    myself : http://wp.personalloansearchs.com/wp-content/uploads/2017/
+    ydzxreplace : http://i1.go2yd.com/image.php?url=
+

@@ -1,6 +1,7 @@
 package io.renren.modules.crawler.ydzx.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +15,12 @@ import io.renren.modules.crawler.ydzx.service.TbDetailsService;
 public class TbDetailsServiceImpl implements TbDetailsService {
 	@Autowired
 	private TbDetailsDao tbDetailsDao;
+
+	@Value("${image.ydzxreplace}")
+	private String ydzxReplace;
+
+	@Value("${image.myself}")
+	private String myself;
 
 	@Override
 	public TbDetailsEntity queryObject(Long id) {
@@ -41,11 +48,14 @@ public class TbDetailsServiceImpl implements TbDetailsService {
 		//if (exts == 1) {
 			//tbDetailsDao.update(tbDetails);
 		//} else {
+		String contextHtml = tbDetails.getContextHtml();
+		contextHtml=contextHtml.replace(ydzxReplace, myself);
+		tbDetails.setContextHtml(contextHtml);
 			tbDetailsDao.save(tbDetails);
 			return true;
 		//}
 	}
-
+	
 	@Override
 	public void update(TbDetailsEntity tbDetails) {
 		tbDetailsDao.update(tbDetails);

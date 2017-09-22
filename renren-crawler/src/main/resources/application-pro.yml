@@ -3,8 +3,8 @@ spring:
         type: com.alibaba.druid.pool.DruidDataSource
         driverClassName: com.mysql.jdbc.Driver
         url: jdbc:mysql://localhost:3306/personal_wp1?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=true
-        username: personal_wp1
-        password: TglC/e3q
+        username: root
+        password: root
         druid:
             initial-size: 10
             max-active: 100
